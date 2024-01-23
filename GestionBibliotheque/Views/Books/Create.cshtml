@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    var authorsList = ViewData["AuthorsList"] as IEnumerable<Author>;
+    var authorsList = new SelectList(ViewData["AuthorsList"] as IEnumerable<Author>, "FirstName", "LastName");
 }
 
 <h1>Create</h1>
