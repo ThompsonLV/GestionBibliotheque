@@ -1,4 +1,5 @@
 ﻿using GestionBibliotheque.Entities;
+using GestionBibliotheque.Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionBibliotheque.Infrastructure.Data
@@ -13,6 +14,20 @@ namespace GestionBibliotheque.Infrastructure.Data
         public DbSet<Rentail> Rentails => Set<Rentail>();
 
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options) { } // à voir pourquoi ?
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AddressConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AdminConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthorConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BookConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(LectorConfiguration).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(PersonConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(RentailConfiguration).Assembly);
+        }
+
 
     }
 }

@@ -3,6 +3,7 @@
     public class Address: Entity
     {
         public string Apt { get; set; } = null!;
+        public int Number {  get; set; }
         public string Street { get; set; } = null!;
         public string City { get; set; } = null!;
         public string ZipCode { get; set; } = null!;

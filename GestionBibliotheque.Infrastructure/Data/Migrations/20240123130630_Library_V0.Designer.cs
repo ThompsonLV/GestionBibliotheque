@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionBibliotheque.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20240123103126_Library_V0")]
+    [Migration("20240123130630_Library_V0")]
     partial class Library_V0
     {
         /// <inheritdoc />
@@ -35,7 +35,8 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
 
                     b.Property<string>("Apt")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -45,50 +46,22 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Number")
+                        .HasMaxLength(10)
+                        .HasColumnType("int");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Adresses");
-                });
-
-            modelBuilder.Entity("GestionBibliotheque.Entities.Author", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Grade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Prenom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("GestionBibliotheque.Entities.Book", b =>
@@ -101,6 +74,11 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("DomainId")
                         .HasColumnType("int");
@@ -131,18 +109,20 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Domains");
                 });
 
-            modelBuilder.Entity("GestionBibliotheque.Entities.Lector", b =>
+            modelBuilder.Entity("GestionBibliotheque.Entities.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,34 +130,40 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Firstname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Lastname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Prenom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.ToTable("Lectors");
+                    b.ToTable("Person");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("GestionBibliotheque.Entities.Rentail", b =>
@@ -206,6 +192,50 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                     b.ToTable("Rentails");
                 });
 
+            modelBuilder.Entity("GestionBibliotheque.Entities.Admin", b =>
+                {
+                    b.HasBaseType("GestionBibliotheque.Entities.Person");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Person", t =>
+                        {
+                            t.Property("Password")
+                                .HasColumnName("Admin_Password");
+                        });
+
+                    b.HasDiscriminator().HasValue("Admin");
+                });
+
+            modelBuilder.Entity("GestionBibliotheque.Entities.Author", b =>
+                {
+                    b.HasBaseType("GestionBibliotheque.Entities.Person");
+
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Author");
+                });
+
+            modelBuilder.Entity("GestionBibliotheque.Entities.Lector", b =>
+                {
+                    b.HasBaseType("GestionBibliotheque.Entities.Person");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasDiscriminator().HasValue("Lector");
+                });
+
             modelBuilder.Entity("GestionBibliotheque.Entities.Book", b =>
                 {
                     b.HasOne("GestionBibliotheque.Entities.Author", "Author")
@@ -225,6 +255,25 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                     b.Navigation("Domain");
                 });
 
+            modelBuilder.Entity("GestionBibliotheque.Entities.Rentail", b =>
+                {
+                    b.HasOne("GestionBibliotheque.Entities.Book", "Book")
+                        .WithMany("Rentails")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GestionBibliotheque.Entities.Lector", "Lector")
+                        .WithMany("Rentails")
+                        .HasForeignKey("LectorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Lector");
+                });
+
             modelBuilder.Entity("GestionBibliotheque.Entities.Lector", b =>
                 {
                     b.HasOne("GestionBibliotheque.Entities.Address", "Address")
@@ -236,33 +285,9 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("GestionBibliotheque.Entities.Rentail", b =>
-                {
-                    b.HasOne("GestionBibliotheque.Entities.Book", "Book")
-                        .WithMany("Rentails")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GestionBibliotheque.Entities.Lector", "Lector")
-                        .WithMany("Rentails")
-                        .HasForeignKey("LectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Lector");
-                });
-
             modelBuilder.Entity("GestionBibliotheque.Entities.Address", b =>
                 {
                     b.Navigation("Lectors");
-                });
-
-            modelBuilder.Entity("GestionBibliotheque.Entities.Author", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("GestionBibliotheque.Entities.Book", b =>
@@ -271,6 +296,11 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("GestionBibliotheque.Entities.Domain", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("GestionBibliotheque.Entities.Author", b =>
                 {
                     b.Navigation("Books");
                 });
