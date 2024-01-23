@@ -24,7 +24,5 @@ namespace GestionBibliotheque.Models
 
         [Required(ErrorMessage ="Le grade est requis")]
         public string Grade { get; set; } = null!;
-
-        //public List<Book?> Books { get; set; }
     }
 }

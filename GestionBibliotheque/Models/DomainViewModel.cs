@@ -14,7 +14,5 @@ namespace GestionBibliotheque.Models
         [Required(ErrorMessage = "La description est requise")]
         [StringLength(255, ErrorMessage = "La description est trop long")]
         public string Description { get; set; } = null!;
-
-        //readonly List<Book> _books = new List<Book>();
     }
 }
