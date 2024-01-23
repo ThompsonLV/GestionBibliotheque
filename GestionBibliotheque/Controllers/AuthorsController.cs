@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GestionBibliotheque.Entities;
 using GestionBibliotheque.Infrastructure.Data;
+using GestionBibliotheque.Models;
 
 namespace GestionBibliotheque.Controllers
 {
@@ -53,16 +54,24 @@ namespace GestionBibliotheque.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Grade,Firstname,Lastname,Email,Phone,Id")] Author author)
+        public async Task<IActionResult> Create(AuthorViewModel avm)
         {
             if (ModelState.IsValid)
             {
+                var author = new Author()
+                {
+                    Lastname = avm.Lastname,
+                    Firstname = avm.Firstname,
+                    Phone = avm.Phone,
+                    Email = avm.Email,
+                    Grade = avm.Grade
+                };
+
                 _context.Add(author);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(avm);
         }
 
         // GET: Authors/Edit/5
@@ -78,7 +87,16 @@ namespace GestionBibliotheque.Controllers
             {
                 return NotFound();
             }
-            return View(author);
+            var avm = new AuthorViewModel()
+            {
+                Id = author.Id,
+                Lastname = author.Lastname,
+                Firstname = author.Firstname,
+                Phone = author.Phone,
+                Email = author.Email,
+                Grade = author.Grade
+            };
+            return View(avm);
         }
 
         // POST: Authors/Edit/5
@@ -86,9 +104,9 @@ namespace GestionBibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Grade,Firstname,Lastname,Email,Phone,Id")] Author author)
+        public async Task<IActionResult> Edit(int id, AuthorViewModel avm)
         {
-            if (id != author.Id)
+            if (id != avm.Id)
             {
                 return NotFound();
             }
@@ -97,12 +115,21 @@ namespace GestionBibliotheque.Controllers
             {
                 try
                 {
+                    var author = new Author()
+                    {
+                        Id = avm.Id,
+                        Lastname = avm.Lastname,
+                        Firstname = avm.Firstname,
+                        Phone = avm.Phone,
+                        Email = avm.Email,
+                        Grade = avm.Grade
+                    };
                     _context.Update(author);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Id))
+                    if (!AuthorExists(avm.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +140,7 @@ namespace GestionBibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(avm);
         }
 
         // GET: Authors/Delete/5
