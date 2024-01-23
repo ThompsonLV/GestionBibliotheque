@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GestionBibliotheque.Entities.Book>
+﻿@model IEnumerable<GestionBibliotheque.Entities.Lector>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Firstname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Lastname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nbpages)
+                @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Domain)
+                @Html.DisplayNameFor(model => model.Phone)
             </th>
             <th></th>
         </tr>
@@ -34,21 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                @Html.DisplayFor(modelItem => item.Firstname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Lastname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nbpages)
-            </td>
-          
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.Firstname)
-                @Html.DisplayFor(modelItem => item.Author.Lastname)
+                @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Domain.Name)
+                @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

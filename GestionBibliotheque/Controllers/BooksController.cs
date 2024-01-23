@@ -23,7 +23,7 @@ namespace GestionBibliotheque.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.ToListAsync());
+            return View(await _context.Books.Include(b => b.Author).Include(b => b.Domain).ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -47,8 +47,9 @@ namespace GestionBibliotheque.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["AuthorsList"] = _context.Authors.ToList();
-            ViewData["DomainsList"] = _context.Domains.ToList();
+            ViewData["AuthorsList"] = new SelectList(_context.Authors.ToList(),"Id", "Firstname");
+            ViewData["DomainsList"] = new SelectList(_context.Domains.ToList(), "Id", "Name");
+
             return View();
         }
 
@@ -59,15 +60,19 @@ namespace GestionBibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BookViewModel bvm)
         {
+            
             if (ModelState.IsValid)
             {
+                var author = await _context.Authors.FindAsync(bvm.AuthorId);
+                var domain = await _context.Domains.FindAsync(bvm.DomainId);
+
                 var book = new Book()
                 { 
                     Title = bvm.Title,
                     Nbpages = bvm.Nbpages,
                     Description = bvm.Description,
-                    Author = bvm.Author,
-                    Domain = bvm.Domain
+                    Author = author,
+                    Domain = domain
                 };
                 _context.Add(book);
                 await _context.SaveChangesAsync();
@@ -84,12 +89,30 @@ namespace GestionBibliotheque.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books
+                .Where(b => b.Id == id)
+                .Include(a => a.Author)
+                .Include(d => d.Domain)
+                .FirstOrDefaultAsync();
+
             if (book == null)
             {
                 return NotFound();
             }
-            return View(book);
+
+            var bvm = new BookViewModel() {
+                Id = book.Id,
+                Title = book.Title,
+                Nbpages = book.Nbpages,
+                Description = book.Description,
+                DomainId = book.Domain.Id,
+                AuthorId = book.Author.Id
+            };
+
+            ViewData["AuthorsList"] = new SelectList(_context.Authors.ToList(), "Id", "Firstname");
+            ViewData["DomainsList"] = new SelectList(_context.Domains.ToList(), "Id", "Name");
+
+            return View(bvm);
         }
 
         // POST: Books/Edit/5
@@ -97,9 +120,9 @@ namespace GestionBibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,Nbpages,Id")] Book book)
+        public async Task<IActionResult> Edit(int id, BookViewModel bvm)
         {
-            if (id != book.Id)
+            if (id != bvm.Id)
             {
                 return NotFound();
             }
@@ -108,12 +131,23 @@ namespace GestionBibliotheque.Controllers
             {
                 try
                 {
+                    var author = await _context.Authors.FindAsync(bvm.AuthorId);
+                    var domain = await _context.Domains.FindAsync(bvm.DomainId);
+
+                    var book = new Book() {
+                        Title = bvm.Title,
+                        Nbpages = bvm.Nbpages,
+                        Description = bvm.Description,
+                        Author = author,
+                        Domain = domain
+                    };
+
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.Id))
+                    if (!BookExists(bvm.Id))
                     {
                         return NotFound();
                     }
@@ -124,7 +158,7 @@ namespace GestionBibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(book);
+            return View(bvm);
         }
 
         // GET: Books/Delete/5

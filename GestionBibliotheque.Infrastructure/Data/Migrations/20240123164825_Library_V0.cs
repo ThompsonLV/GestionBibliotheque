@@ -12,6 +12,23 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Admin",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admin", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Adresses",
                 columns: table => new
                 {
@@ -30,6 +47,23 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Authors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Grade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Domains",
                 columns: table => new
                 {
@@ -44,26 +78,23 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Person",
+                name: "Lectors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Firstname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Lastname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
-                    Admin_Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AddressId = table.Column<int>(type: "int", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Person", x => x.Id);
+                    table.PrimaryKey("PK_Lectors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Person_Adresses_AddressId",
+                        name: "FK_Lectors_Adresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Adresses",
                         principalColumn: "Id",
@@ -86,15 +117,15 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Books_Domains_DomainId",
-                        column: x => x.DomainId,
-                        principalTable: "Domains",
+                        name: "FK_Books_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Books_Person_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Person",
+                        name: "FK_Books_Domains_DomainId",
+                        column: x => x.DomainId,
+                        principalTable: "Domains",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -119,9 +150,9 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Rentails_Person_LectorId",
+                        name: "FK_Rentails_Lectors_LectorId",
                         column: x => x.LectorId,
-                        principalTable: "Person",
+                        principalTable: "Lectors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -137,15 +168,9 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 column: "DomainId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Person_AddressId",
-                table: "Person",
+                name: "IX_Lectors_AddressId",
+                table: "Lectors",
                 column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Person_Email",
-                table: "Person",
-                column: "Email",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rentails_BookId",
@@ -162,16 +187,22 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Admin");
+
+            migrationBuilder.DropTable(
                 name: "Rentails");
 
             migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Domains");
+                name: "Lectors");
 
             migrationBuilder.DropTable(
-                name: "Person");
+                name: "Authors");
+
+            migrationBuilder.DropTable(
+                name: "Domains");
 
             migrationBuilder.DropTable(
                 name: "Adresses");

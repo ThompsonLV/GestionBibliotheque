@@ -24,7 +24,6 @@ namespace GestionBibliotheque.Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BookConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(LectorConfiguration).Assembly);
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(PersonConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RentailConfiguration).Assembly);
         }
 
