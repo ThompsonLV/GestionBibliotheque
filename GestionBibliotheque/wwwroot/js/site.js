@@ -22,7 +22,7 @@ $(function () {
             $("#lectorId").val(ui.item.id)
         },
         options: { messages: { noResults: "", results: "" } }
-    },500)
+    },800)
 
     //book autocomplete
     $("#books").autocomplete({
@@ -45,5 +45,5 @@ $(function () {
             console.log(ui)
         },
         options: { messages: { noResults: "", results: "" } }
-    },500)
+    },800)
 })   

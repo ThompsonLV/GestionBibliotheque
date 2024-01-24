@@ -6,14 +6,26 @@
 
 <h1>Edit</h1>
 
-<h4>Rentail</h4>
+<h4>
+    Emprunt - @ViewData["BookTitle"]
+</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-4 jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Emprunter par: @ViewData["LectorName"]</li>
+            <li class="list-group-item">Emprunter le:  @ViewData["RentailDate"] </li>
+        </ul>
+    </div>
+ 
+    <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
      
             <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+               
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

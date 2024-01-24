@@ -88,12 +88,16 @@ namespace GestionBibliotheque.Controllers
             var rentail = await _context.Rentails
                 .Where(r => r.Id == id)
                 .Include(r => r.Book)
-                .Include(r => r.Book)
+                .Include(r => r.Lector)
                 .FirstOrDefaultAsync();
+
             if (rentail == null)
             {
                 return NotFound();
             }
+            ViewData["RentailDate"] = rentail.RentailDate;
+            ViewData["BookTitle"] = rentail.Book.Title;
+            ViewData["LectorName"] = $"{rentail.Lector.Firstname} {rentail.Lector.Lastname}";
 
             var rvm = new RentailsViewModel() {
                 Id = rentail.Id,
