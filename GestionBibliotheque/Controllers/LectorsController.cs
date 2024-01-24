@@ -218,7 +218,11 @@ namespace GestionBibliotheque.Controllers
         [HttpPost]
         public JsonResult GetLectorsBySearch(string search)
         {
-            var lectors = _context.Lectors.Where(l => l.Firstname.Contains(search) || l.Lastname.Contains(search)).ToList();
+            var lectors = _context.Lectors
+                .Where(l => l.Firstname.Contains(search) || l.Lastname.Contains(search))
+                .Select(l => new { l.Firstname, l.Lastname, l.Id})
+                .ToList();
+
             return Json(lectors);
         }
     }

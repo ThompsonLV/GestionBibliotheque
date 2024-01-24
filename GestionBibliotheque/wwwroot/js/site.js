@@ -3,8 +3,8 @@
 
 // Write your JavaScript code.
 $(function () {
-
-    $("#test").autocomplete({
+    //Lector autocomplete
+    $("#lectors").autocomplete({
         source: function (req, res) {
             $.ajax({
                 url: "/Lectors/GetLectorsBySearch",
@@ -13,11 +13,37 @@ $(function () {
                 data: { search: req.term },
                 success: function (data) {
                     res($.map(data, function (item) {
-                        return {label: `${item.firstname} ${item.lastname}`, value: item.id}
+                        return { label: `${item.firstname} ${item.lastname}`, value: `${item.firstname} ${item.lastname}`, id:item.id }
                     }))
-                }
+                },
             })
         },
-    //    messages: {noResults: "", results: ""}
-    })
+        select: function (event, ui) {
+            $("#lectorId").val(ui.item.id)
+        },
+        options: { messages: { noResults: "", results: "" } }
+    },500)
+
+    //book autocomplete
+    $("#books").autocomplete({
+        source: function (req, res) {
+            $.ajax({
+                url: "/Books/GetBooksBySearch",
+                type: "POST",
+                dataType: "JSON",
+                data: { search: req.term },
+                success: function (data) {
+                    console.log(data)
+                    res($.map(data, function (item) {
+                        return { label: `${item.title} - ${item.firstname} ${item.lastname}`, value: `${item.title}`, id: item.id }
+                    }))
+                },
+            })
+        },
+        select: function (event, ui) {
+            $("#bookId").val(ui.item.id)
+            console.log(ui)
+        },
+        options: { messages: { noResults: "", results: "" } }
+    },500)
 })   

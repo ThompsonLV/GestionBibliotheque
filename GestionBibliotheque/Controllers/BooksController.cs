@@ -198,5 +198,17 @@ namespace GestionBibliotheque.Controllers
         {
             return _context.Books.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        public JsonResult GetBooksBySearch(string search)
+        {
+            var books = _context.Books
+                .Include(b => b.Author)
+                .Where(b => b.Title.Contains(search) || b.Author.Firstname.Contains(search) || b.Author.Lastname.Contains(search))
+                .Select(b => new { b.Title, b.Author.Firstname, b.Author.Lastname, b.Id })
+                .ToList();
+
+            return Json(books);
+        }
     }
 }
