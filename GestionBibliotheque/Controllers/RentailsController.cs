@@ -90,7 +90,6 @@ namespace GestionBibliotheque.Controllers
                 .Include(r => r.Book)
                 .Include(r => r.Book)
                 .FirstOrDefaultAsync();
-
             if (rentail == null)
             {
                 return NotFound();
