@@ -10,7 +10,6 @@ namespace GestionBibliotheque.Infrastructure.Data
             var optionsBuilder = new DbContextOptionsBuilder<LibraryContext>();
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=GestionBibliotheque;Trusted_Connection=True;MultipleActiveResultSets=true;");
             return new LibraryContext(optionsBuilder.Options);
-
         }
     }
 }

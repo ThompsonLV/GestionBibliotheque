@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionBibliotheque.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20240123164825_Library_V0")]
+    [Migration("20240124082955_Library_V0")]
     partial class Library_V0
     {
         /// <inheritdoc />
@@ -34,7 +34,6 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Apt")
-                        .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
@@ -46,7 +45,7 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Number")
+                    b.Property<int?>("Number")
                         .HasMaxLength(10)
                         .HasColumnType("int");
 
@@ -241,6 +240,9 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RentailDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

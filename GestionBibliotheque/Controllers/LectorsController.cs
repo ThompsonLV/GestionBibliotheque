@@ -214,5 +214,12 @@ namespace GestionBibliotheque.Controllers
         {
             return _context.Lectors.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        public JsonResult GetLectorsBySearch(string search)
+        {
+            var lectors = _context.Lectors.Where(l => l.Firstname.Contains(search) || l.Lastname.Contains(search)).ToList();
+            return Json(lectors);
+        }
     }
 }

@@ -34,8 +34,8 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Apt = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
-                    Number = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    Apt = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: true),
+                    Number = table.Column<int>(type: "int", maxLength: 10, nullable: true),
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
@@ -137,6 +137,7 @@ namespace GestionBibliotheque.Infrastructure.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RentailDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LectorId = table.Column<int>(type: "int", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false)
                 },

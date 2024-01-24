@@ -23,7 +23,7 @@ namespace GestionBibliotheque.Controllers
         // GET: Rentails
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rentails.Include(r => r.Book).Include(r => r.Lector).ToListAsync());
+            return View();
         }
 
         // GET: Rentails/Details/5
@@ -184,6 +184,28 @@ namespace GestionBibliotheque.Controllers
         private bool RentailExists(int id)
         {
             return _context.Rentails.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        private async Task<IActionResult> ReturnBook(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var rentail = await _context.Rentails
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (rentail == null)
+            {
+                return NotFound();
+            }
+            rentail.ReturnDate = (DateTime?)DateTime.Now;
+            _context.Update(rentail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
