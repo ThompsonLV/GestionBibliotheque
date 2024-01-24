@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var authorsList = ViewData["AuthorsList"] as IEnumerable<SelectListItem>;
+    var domainsList = ViewData["DomainsList"] as IEnumerable<SelectListItem>;
 }
 
 <h1>Edit</h1>
@@ -28,6 +30,17 @@
                 <span asp-validation-for="Nbpages" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="AuthorId" class="control-label">Autheur</label>
+                <select asp-for="AuthorId" asp-items="authorsList" class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DomainId" class="control-label">Domaine</label>
+                <select asp-for="DomainId" asp-items="domainsList" class="form-control"></select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

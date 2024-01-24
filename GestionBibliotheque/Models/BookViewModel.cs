@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestionBibliotheque.Models
 {
@@ -16,7 +17,8 @@ namespace GestionBibliotheque.Models
         [Required(ErrorMessage = "Le nombre de page est requis")]
         public int Nbpages { get; set; }
 
-        public Author Author { get; set; } = null!;
-        public Domain Domain { get; set; } = null!;
+        public int AuthorId { get; set; }
+   
+        public int DomainId { get; set; }
     }
 }

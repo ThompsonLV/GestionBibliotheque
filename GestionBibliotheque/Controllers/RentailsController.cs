@@ -11,22 +11,22 @@ using GestionBibliotheque.Models;
 
 namespace GestionBibliotheque.Controllers
 {
-    public class BooksController : Controller
+    public class RentailsController : Controller
     {
         private readonly LibraryContext _context;
 
-        public BooksController(LibraryContext context)
+        public RentailsController(LibraryContext context)
         {
             _context = context;
         }
 
-        // GET: Books
+        // GET: Rentails
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.Include(b => b.Author).Include(b => b.Domain).ToListAsync());
+            return View(await _context.Rentails.Include(r => r.Book).Include(r => r.Lector).ToListAsync());
         }
 
-        // GET: Books/Details/5
+        // GET: Rentails/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,54 +34,50 @@ namespace GestionBibliotheque.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
+            var rentail = await _context.Rentails
+                .Include(r => r.Book)
+                .Include(r => r.Lector)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
+            if (rentail == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            return View(rentail);
         }
 
-        // GET: Books/Create
+        // GET: Rentails/Create
         public IActionResult Create()
         {
-            ViewData["AuthorsList"] = new SelectList(_context.Authors.ToList(),"Id", "Firstname");
-            ViewData["DomainsList"] = new SelectList(_context.Domains.ToList(), "Id", "Name");
-
             return View();
         }
 
-        // POST: Books/Create
+        // POST: Rentails/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookViewModel bvm)
+        public async Task<IActionResult> Create(RentailsViewModel rvm)
         {
-            
             if (ModelState.IsValid)
             {
-                var author = await _context.Authors.FindAsync(bvm.AuthorId);
-                var domain = await _context.Domains.FindAsync(bvm.DomainId);
+                var lector = await _context.Lectors.FindAsync(rvm.LectorId);
+                var book = await _context.Books.FindAsync(rvm.BookId);
 
-                var book = new Book()
-                { 
-                    Title = bvm.Title,
-                    Nbpages = bvm.Nbpages,
-                    Description = bvm.Description,
-                    Author = author,
-                    Domain = domain
+                var rentail = new Rentail() {
+                    Lector = lector,
+                    Book = book,
+                    RentailDate = DateTime.Now,
                 };
-                _context.Add(book);
+
+                _context.Add(rentail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(bvm);
+            return View(rvm);
         }
 
-        // GET: Books/Edit/5
+        // GET: Rentails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,40 +85,34 @@ namespace GestionBibliotheque.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .Where(b => b.Id == id)
-                .Include(a => a.Author)
-                .Include(d => d.Domain)
+            var rentail = await _context.Rentails
+                .Where(r => r.Id == id)
+                .Include(r => r.Book)
+                .Include(r => r.Book)
                 .FirstOrDefaultAsync();
 
-            if (book == null)
+            if (rentail == null)
             {
                 return NotFound();
             }
 
-            var bvm = new BookViewModel() {
-                Id = book.Id,
-                Title = book.Title,
-                Nbpages = book.Nbpages,
-                Description = book.Description,
-                DomainId = book.Domain.Id,
-                AuthorId = book.Author.Id
+            var rvm = new RentailsViewModel() {
+                Id = rentail.Id,
+                BookId = rentail.Book.Id,
+                LectorId = rentail.Lector.Id,
             };
 
-            ViewData["AuthorsList"] = new SelectList(_context.Authors.ToList(), "Id", "Firstname");
-            ViewData["DomainsList"] = new SelectList(_context.Domains.ToList(), "Id", "Name");
-
-            return View(bvm);
+            return View(rvm);
         }
 
-        // POST: Books/Edit/5
+        // POST: Rentails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, BookViewModel bvm)
+        public async Task<IActionResult> Edit(int id, RentailsViewModel rvm)
         {
-            if (id != bvm.Id)
+            if (id != rvm.Id)
             {
                 return NotFound();
             }
@@ -131,23 +121,21 @@ namespace GestionBibliotheque.Controllers
             {
                 try
                 {
-                    var author = await _context.Authors.FindAsync(bvm.AuthorId);
-                    var domain = await _context.Domains.FindAsync(bvm.DomainId);
+                    var lector = await _context.Lectors.FindAsync(rvm.LectorId);
+                    var book = await _context.Books.FindAsync(rvm.BookId);
 
-                    var book = new Book() {
-                        Title = bvm.Title,
-                        Nbpages = bvm.Nbpages,
-                        Description = bvm.Description,
-                        Author = author,
-                        Domain = domain
+                    var rentail = new Rentail() {
+                        Lector = lector,
+                        Book = book,
+                        RentailDate = DateTime.Now,
                     };
 
-                    _context.Update(book);
+                    _context.Update(rentail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(bvm.Id))
+                    if (!RentailExists(rvm.Id))
                     {
                         return NotFound();
                     }
@@ -158,10 +146,10 @@ namespace GestionBibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bvm);
+            return View(rvm);
         }
 
-        // GET: Books/Delete/5
+        // GET: Rentails/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,34 +157,34 @@ namespace GestionBibliotheque.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
+            var rentail = await _context.Rentails
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
+            if (rentail == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            return View(rentail);
         }
 
-        // POST: Books/Delete/5
+        // POST: Rentails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book != null)
+            var rentail = await _context.Rentails.FindAsync(id);
+            if (rentail != null)
             {
-                _context.Books.Remove(book);
+                _context.Rentails.Remove(rentail);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        private bool RentailExists(int id)
         {
-            return _context.Books.Any(e => e.Id == id);
+            return _context.Rentails.Any(e => e.Id == id);
         }
     }
 }
