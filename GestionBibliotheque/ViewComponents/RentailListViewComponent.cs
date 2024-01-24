@@ -1,4 +1,5 @@
-﻿using GestionBibliotheque.Infrastructure.Data;
+﻿using GestionBibliotheque.Entities;
+using GestionBibliotheque.Infrastructure.Data;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,18 +20,30 @@ namespace GestionBibliotheque.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int? BookId, int? LectorId)
         {
             List<Rentail> rentails = new List<Rentail>();
-            var q = Context.Rentails
-                .Include(r => r.Lector)
-                .Include(r => r.Book);
 
             if (BookId != null)
             {
-                q.Where(r => r.Book.Id == BookId);
-            } else if (LectorId != null)
-            {
-                q.Where(r => r.Lector.Id == LectorId);
+                rentails = await Context.Rentails
+                    .Include(r => r.Book)
+                    .Include(r => r.Lector)
+                    .Where(r => r.Book.Id == BookId)
+                    .ToListAsync();
             }
-            rentails = await q.ToListAsync();
+            else if (LectorId != null)
+            {
+                rentails = await Context.Rentails
+                    .Include(r => r.Book)
+                    .Include(r => r.Lector)
+                    .Where(r => r.Lector.Id == LectorId)
+                    .ToListAsync();
+            }
+            else
+            {
+                rentails = await Context.Rentails
+                    .Include(b => b.Book)
+                    .Include(b => b.Lector)
+                    .ToListAsync();
+            }
             return View(rentails);
         }
     }

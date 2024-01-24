@@ -36,6 +36,7 @@ namespace GestionBibliotheque.Controllers
             }
 
             var lector = await _context.Lectors
+                .Include(l => l.Address)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (lector == null)
             {
@@ -112,6 +113,7 @@ namespace GestionBibliotheque.Controllers
                 Email = lector.Email,
                 Password = lector.Password,
                 Phone = lector.Phone,
+                AdressId = lector.Address.Id,
                 Apt = lector.Address.Apt,
                 City = lector.Address.City,
                 Country = lector.Address.Country,
@@ -140,7 +142,7 @@ namespace GestionBibliotheque.Controllers
                 try
                 {
                     var address = new Address() {
-                        Id = lvm.Id,
+                        Id = (int)lvm.AdressId,
                         Apt = lvm.Apt,
                         Number = lvm.Number,
                         City = lvm.City,
@@ -150,6 +152,7 @@ namespace GestionBibliotheque.Controllers
                     };
 
                     var lector = new Lector() {
+                        Id = lvm.Id,
                         Firstname = lvm.Firstname,
                         Lastname = lvm.Lastname,
                         Email = lvm.Email,

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<GestionBibliotheque.Entities.Book>
+
 <h6>Liste des livres</h6>
 <table class="table">
     <thead>
@@ -17,6 +18,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Domain)
+            </th>
+            <th>
+                Disponibilité
             </th>
             <th></th>
         </tr>
@@ -41,6 +45,19 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Domain.Name)
+                </td>                
+                <td>
+                    @{
+                        var rent = item.Rentails.FirstOrDefault();
+                    }
+                    @if ((rent != null && rent?.ReturnDate == null) || (rent?.ReturnDate != null && rent?.ReturnDate <= DateTime.Now))
+                    {
+                        <i class="fa-solid fa-close"></i>
+
+                        } else
+                    {
+                        <i class="fa-solid fa-check"></i>
+                    }
                 </td>
                 <td>
                     <a asp-action="Edit" asp-controller="Books" asp-route-id="@item.Id">Edit</a> |

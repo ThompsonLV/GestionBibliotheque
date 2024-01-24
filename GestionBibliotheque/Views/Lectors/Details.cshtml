@@ -6,41 +6,23 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Lector</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Firstname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Firstname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lastname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lastname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-    </dl>
+<h4>@Model.Firstname @Model.Lastname</h4>
+<div class="row">
+    <div class="col-4">
+        <ul class="list-group">
+            <li class="list-group-item"><i class="fa-solid fa-envelope"></i> @Model?.Email</li>
+            <li class="list-group-item"><i class="fa-solid fa-phone"></i> @Model?.Phone</li>    
+        </ul>        
+        <ul class="list-group mt-2">
+            <li class="list-group-item">@Model?.Address.Apt @Model?.Address.Number @Model?.Address.Street</li>
+            <li class="list-group-item">@Model?.Address.City</li>
+            <li class="list-group-item">@Model?.Address.ZipCode</li>
+            <li class="list-group-item">@Model?.Address.Country</li>
+        </ul>
+    </div>
+    <div class="col-8">
+        @await Component.InvokeAsync("RentailList", new {LectorId = Model.Id})
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |

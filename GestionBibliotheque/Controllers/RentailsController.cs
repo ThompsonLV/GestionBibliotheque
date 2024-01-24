@@ -190,26 +190,25 @@ namespace GestionBibliotheque.Controllers
             return _context.Rentails.Any(e => e.Id == id);
         }
 
-        [HttpPost]
-        private async Task<IActionResult> ReturnBook(int? id)
+        [HttpPost,ActionName("ReturnBook")]
+        public JsonResult ReturnBook(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return Json(new { error = "Emprunt non trouvé" });
             }
 
-            var rentail = await _context.Rentails
+            var rentail =  _context.Rentails
                 .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
-
+                .FirstOrDefault();
             if (rentail == null)
             {
-                return NotFound();
+                return Json(new {error= "Emprunt non trouvé"});
             }
             rentail.ReturnDate = (DateTime?)DateTime.Now;
             _context.Update(rentail);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _context.SaveChanges();
+            return Json(new { success= "Modification validée"});
         }
     }
 }

@@ -22,8 +22,18 @@ namespace GestionBibliotheque.ViewComponents
                 books = await Context.Books
                     .Include(b => b.Domain)
                     .Include(b => b.Author)
+                    .Include(b => b.Rentails.OrderByDescending(r => r.Id).Take(1))
                     .Where(r => r.Domain.Id == DomainId)
                     .ToListAsync();
+
+                //books = (from book in Context.Books
+                //             join rentail in Context.Rentails.OrderByDescending(r => r.Id).Take(1) on book.Id equals rentail.Book.Id into r
+                //             join author in Context.Authors on book.Author.Id equals author.Id
+                //             join domain in Context.Domains on book.Domain.Id equals domain.Id
+                //             from rent in r.DefaultIfEmpty()
+                //             where ((rent == null) || (rent != null && rent.ReturnDate != null && rent.ReturnDate <= DateTime.Now))
+                //             select book)
+                //       .ToList();
             }
             else if (AuthorId != null)
             {
@@ -41,5 +51,7 @@ namespace GestionBibliotheque.ViewComponents
             }
             return View(books);
         }
+
+
     }
 }

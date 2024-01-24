@@ -14,11 +14,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <input type="hidden" asp-for="LectorId" id="lectorId" />
-                <input type="text" id="lectors" placeholder="Rechercher un lecteur" />
+                <input type="text" class="form-control" id="lectors" placeholder="Rechercher un lecteur" />
             </div>
             <div class="form-group">
                 <input type="hidden" asp-for="BookId" id="bookId" />
-                <input type="text" id="books" placeholder="Rechercher un livre"/>
+                <input type="text" class="form-control" id="books" placeholder="Rechercher un livre" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

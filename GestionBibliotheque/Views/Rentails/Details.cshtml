@@ -6,25 +6,25 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Rentail</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RentailDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RentailDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReturnDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReturnDate)
-        </dd>
-    </dl>
+<h4>
+    Emprunt - @Model.Book.Title
+</h4>
+<hr />
+<div class="row">
+    <div class="col-4 jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Emprunter par: @Model.Lector.Firstname @Model.Lector.Lastname</li>
+            <li class="list-group-item">Emprunter le: @Model.RentailDate</li>
+            <li class="list-group-item">Rendu le: @Model.ReturnDate</li>
+        </ul>
+    </div>
 </div>
+
 <div>
+    @if (Model.ReturnDate == null)
+    {
+        <a onclick="returnBook(@Model.Id)" href="javascript:void(0)" class="btn btn-primary">Return book</a>
+    }
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

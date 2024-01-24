@@ -13,7 +13,7 @@ $(function () {
                 data: { search: req.term },
                 success: function (data) {
                     res($.map(data, function (item) {
-                        return { label: `${item.firstname} ${item.lastname}`, value: `${item.firstname} ${item.lastname}`, id:item.id }
+                        return { label: `${item.firstname} ${item.lastname}`, value: `${item.firstname} ${item.lastname}`, id: item.id }
                     }))
                 },
             })
@@ -33,7 +33,6 @@ $(function () {
                 dataType: "JSON",
                 data: { search: req.term },
                 success: function (data) {
-                    console.log(data)
                     res($.map(data, function (item) {
                         return { label: `${item.title} - ${item.firstname} ${item.lastname}`, value: `${item.title}`, id: item.id }
                     }))
@@ -42,8 +41,23 @@ $(function () {
         },
         select: function (event, ui) {
             $("#bookId").val(ui.item.id)
-            console.log(ui)
         },
         options: { messages: { noResults: "", results: "" } }
     },800)
 })   
+
+function returnBook(id) {
+    $.ajax({
+        url: "/Rentails/ReturnBook",
+        type: "POST",
+        dataType: "JSON",
+        data: { id: id },
+        success: function (data) {
+            console.log(data)
+            if (data.success) {
+                window.location.reload()
+            }
+        },
+    })
+}
+                    

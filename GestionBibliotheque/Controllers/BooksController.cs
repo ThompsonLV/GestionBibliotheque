@@ -35,6 +35,7 @@ namespace GestionBibliotheque.Controllers
             }
 
             var book = await _context.Books
+                .Include(b => b.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
@@ -202,13 +203,14 @@ namespace GestionBibliotheque.Controllers
         [HttpPost]
         public JsonResult GetBooksBySearch(string search)
         {
-            var books = _context.Books
-                .Include(b => b.Author)
-                .Where(b => b.Title.Contains(search) || b.Author.Firstname.Contains(search) || b.Author.Lastname.Contains(search))
-                .Select(b => new { b.Title, b.Author.Firstname, b.Author.Lastname, b.Id })
-                .ToList();
-
+            var books = (from book in _context.Books
+                        join rentail in _context.Rentails.OrderByDescending(r => r.Id).Take(1) on book.Id equals rentail.Book.Id into r
+                        join author in _context.Authors on book.Author.Id equals author.Id 
+                        from rent in r.DefaultIfEmpty()
+                        where book.Title.Contains(search) && ((rent == null ) || (rent != null && rent.ReturnDate != null && rent.ReturnDate <= DateTime.Now))
+                        select new { book.Title, author.Firstname, author.Lastname, book.Id })
+                        .ToList();        
             return Json(books);
-        }
+        }        
     }
 }

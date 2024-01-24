@@ -5,6 +5,7 @@ namespace GestionBibliotheque.Models
     public class LectorViewModel
     {
         public int Id { get; set; }
+        public int? AdressId { get; set; }
 
         [Required(ErrorMessage = "Le nom est requis")]
         [StringLength(30, ErrorMessage = "Le nom est trop long")]
@@ -25,6 +26,7 @@ namespace GestionBibliotheque.Models
         [Required(ErrorMessage = "Le Password est requis")]
         public string Password { get; set; } = null!;
 
+        [StringLength(8, ErrorMessage ="Le nom d'appartement est trop long")]
         public string? Apt { get; set; }
         public int? Number { get; set; }
 
