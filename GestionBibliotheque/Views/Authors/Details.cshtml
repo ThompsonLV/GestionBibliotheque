@@ -7,40 +7,20 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Author</h4>
+    <h4>Author : @Model?.Firstname @Model?.Lastname</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Grade)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Grade)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Firstname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Firstname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lastname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lastname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-4 jumbotron">
+            <ul class="list-group">
+                <li class="list-group-item"> <i class="fa-solid fa-phone"></i>@Model?.Grade</li>
+                <li class="list-group-item">@Model?.Email</li>
+                <li class="list-group-item">@Model?.Phone</li>
+            </ul>
+        </div>
+        <div class="col-8">
+            @await Component.InvokeAsync("BookList", new { AuthorId = Model?.Id })
+        </div>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<GestionBibliotheque.Entities.Book>
+<h6>Liste des livres</h6>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nbpages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Domain)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nbpages)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.Firstname)
+                    @Html.DisplayFor(modelItem => item.Author.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Domain.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-controller="Books" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-controller="Books" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-controller="Books" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
